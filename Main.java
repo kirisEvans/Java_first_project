@@ -22,5 +22,6 @@ public class Main {
         System.out.println(new File("Resources/Character/ginka.bmp").exists());
 
         System.out.println("HHH");
+        int a = 0;
     }
 }
