@@ -40,8 +40,7 @@ public class GameFrame extends JFrame {
                 updateAllLabels(stepLabel, getWidth(), getHeight());
             }
         });
-        this.controller = new GameController(gamePanel, mapModel);
-
+        this.controller = new GameController(this, gamePanel, mapModel);
 
         //todo: add other button here
         this.setLocationRelativeTo(null);

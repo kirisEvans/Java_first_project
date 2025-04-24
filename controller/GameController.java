@@ -3,6 +3,7 @@ package controller;
 import model.Direction;
 import model.MapModel;
 import view.game.BoxComponent;
+import view.game.GameFrame;
 import view.game.GamePanel;
 
 /**
@@ -12,8 +13,11 @@ import view.game.GamePanel;
 public class GameController {
     private final GamePanel view;
     private MapModel model;
+    private GameFrame gameFrame;
+    private boolean be_success = false;
 
-    public GameController(GamePanel view, MapModel model) {
+    public GameController(GameFrame gameFrame, GamePanel view, MapModel model) {
+        this.gameFrame = gameFrame;
         this.view = view;
         this.model = model;
         view.setController(this);
@@ -51,7 +55,7 @@ public class GameController {
                         be_executed = true;
                     }
                 }
-                else if (direction == Direction.RIGHT) {
+                else if (direction == Direction.RIGHT && model.checkInWidthSize(nextCol+1)) {
                     if (model.getId(nextRow, nextCol+1) == 0) {
                         model.getMatrix()[row][col] = 0;
                         model.getMatrix()[nextRow][nextCol+1] = 2;
@@ -87,7 +91,7 @@ public class GameController {
                         be_executed = true;
                     }
                 }
-                else if (direction == Direction.DOWN) {
+                else if (direction == Direction.DOWN && model.checkInHeightSize(nextRow+1)) {
                     if (model.getId(nextRow+1, nextCol) == 0) {
                         model.getMatrix()[row][col] = 0;
                         model.getMatrix()[nextRow+1][nextCol] = 3;
@@ -125,7 +129,7 @@ public class GameController {
                         be_executed = true;
                     }
                 }
-                else if (direction == Direction.DOWN) {
+                else if (direction == Direction.DOWN && model.checkInHeightSize(nextRow+1)) {
                     if (model.getId(nextRow+1, nextCol) == 0 && model.getId(nextRow+1, nextCol+1) == 0) {
                         model.getMatrix()[row][col] = 0;
                         model.getMatrix()[row][col+1] = 0;
@@ -143,7 +147,7 @@ public class GameController {
                         be_executed = true;
                     }
                 }
-                else if (direction == Direction.RIGHT) {
+                else if (direction == Direction.RIGHT && model.checkInWidthSize(nextCol+1)) {
                     if (model.getId(nextRow, nextCol+1) == 0 && model.getId(nextRow+1, nextCol+1) == 0) {
                         model.getMatrix()[row][col] = 0;
                         model.getMatrix()[row+1][col] = 0;
@@ -157,6 +161,10 @@ public class GameController {
                     box.setRow(nextRow);
                     box.setCol(nextCol);
                     box.setLocation(box.getCol() * view.getGrid_size() + 2, box.getRow() * view.getGrid_size() + 2);
+                    if (model.getMatrix()[model.getSuccess_condition()[0]][model.getSuccess_condition()[1]] == 4
+                    && model.getMatrix()[model.getSuccess_condition()[0] + 1][model.getSuccess_condition()[1] + 1] == 4) {
+                        be_success = true;
+                    }
                     return true;
                 }
             }
@@ -164,8 +172,12 @@ public class GameController {
         return false;
     }
 
-    public MapModel getModel() {
-        return this.model;
+    public boolean isBe_success() {
+        return be_success;
+    }
+
+    public GameFrame getGameFrame() {
+        return gameFrame;
     }
 
     //todo: add other methods such as loadGame, saveGame...

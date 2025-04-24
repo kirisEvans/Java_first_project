@@ -153,10 +153,8 @@ public class GamePanel extends ListenerPanel {
     public void afterMove() {
         this.steps++;
         this.stepLabel.setText(String.format("步数: %d", this.steps));
-        MapModel moved_model = controller.getModel();
-        int[] success_list = moved_model.getSuccess_condition();
-        if (moved_model.getMatrix()[success_list[0]][success_list[1]] == 4) {
-            JOptionPane.showMessageDialog(this, "恭喜成功！");
+        if (controller.isBe_success()) {
+            JOptionPane.showMessageDialog(controller.getGameFrame(), "恭喜成功！");
         }
     }
 
