@@ -55,21 +55,21 @@ public class GamePanel extends ListenerPanel {
             for (int j = 0; j < map[0].length; j++) {
                 BoxComponent box = null;
                 if (map[i][j] == 1) {
-                    box = new BoxComponent("Resources/Character/atri_1.png", i, j);
+                    box = new BoxComponent("Resources/Character/ch1.png", i, j);
                     box.setSize(grid_size, grid_size);
                     map[i][j] = 0;
                 } else if (map[i][j] == 2) {
-                    box = new BoxComponent("Resources/Character/atri.png", i, j);
+                    box = new BoxComponent("Resources/Character/ch2.png", i, j);
                     box.setSize(grid_size * 2, grid_size);
                     map[i][j] = 0;
                     map[i][j + 1] = 0;
                 } else if (map[i][j] == 3) {
-                    box = new BoxComponent("Resources/Character/atri_3.png", i, j);
+                    box = new BoxComponent("Resources/Character/ch3.png", i, j);
                     box.setSize(grid_size, grid_size * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;
                 } else if (map[i][j] == 4) {
-                    box = new BoxComponent("Resources/Character/atri_2.png", i, j);
+                    box = new BoxComponent("Resources/Character/ch4.png", i, j);
                     box.setSize(grid_size * 2, grid_size * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;

@@ -45,8 +45,26 @@ public class GameMusic {
 
             File next = currentIterator.next();
             AudioInputStream audio = AudioSystem.getAudioInputStream(next);
+
+            // 获取原始格式
+            AudioFormat baseFormat = audio.getFormat();
+
+            // 创建兼容目标格式（16-bit PCM）
+            AudioFormat targetFormat = new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.getSampleRate(),
+                    16, // 转为 16-bit
+                    baseFormat.getChannels(),
+                    baseFormat.getChannels() * 2, // 每帧字节数 = 通道数 * 2 (16-bit)
+                    baseFormat.getSampleRate(),
+                    false // 小端
+            );
+
+            // 转换流
+            AudioInputStream decodedAudio = AudioSystem.getAudioInputStream(targetFormat, audio);
+
             clip = AudioSystem.getClip();
-            clip.open(audio);
+            clip.open(decodedAudio);
 
             clip.addLineListener(new LineListener() {
                 @Override
