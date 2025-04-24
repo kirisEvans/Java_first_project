@@ -88,7 +88,6 @@ public class GameController {
                     }
                 }
                 else if (direction == Direction.DOWN) {
-                    System.out.println(model.getId(nextRow+1, nextCol));
                     if (model.getId(nextRow+1, nextCol) == 0) {
                         model.getMatrix()[row][col] = 0;
                         model.getMatrix()[nextRow+1][nextCol] = 3;
@@ -163,6 +162,10 @@ public class GameController {
             }
         }
         return false;
+    }
+
+    public MapModel getModel() {
+        return this.model;
     }
 
     //todo: add other methods such as loadGame, saveGame...

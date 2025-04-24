@@ -7,12 +7,14 @@ public enum MapModel {
             {3, 2, 2, 3},
             {3, 1, 1, 3},
             {1, 0, 0, 1}
-    });
+    }, new int[] {3, 1});
 
     private final int[][] matrix;
+    private final int[] success_condition;
 
-    MapModel(int[][] matrix) {
+    MapModel(int[][] matrix, int[] success_condition) {
         this.matrix = matrix;
+        this.success_condition = success_condition;
     }
 
     public int getWidth() {
@@ -37,5 +39,9 @@ public enum MapModel {
 
     public boolean checkInHeightSize(int row) {
         return row >= 0 && row < matrix.length;
+    }
+
+    public int[] getSuccess_condition() {
+        return success_condition;
     }
 }

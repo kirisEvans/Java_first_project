@@ -10,8 +10,6 @@ import java.awt.event.ComponentEvent;
 
 public class GameFrame extends JFrame {
     private GameController controller;
-    private JButton restartBtn;
-    private JButton loadBtn;
     private MapModel mapModel;
     private JLabel stepLabel;
     private GamePanel gamePanel;
@@ -44,20 +42,7 @@ public class GameFrame extends JFrame {
         });
         this.controller = new GameController(gamePanel, mapModel);
 
-//        this.restartBtn = FrameUtil.createButton(this, "Restart", new Point(gamePanel.getWidth() + 80, 120), 80, 50);
-//        this.loadBtn = FrameUtil.createButton(this, "Load", new Point(gamePanel.getWidth() + 80, 210), 80, 50);
-//        this.stepLabel = FrameUtil.createJLabel(this, "Start", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 70), 180, 50);
-//        gamePanel.setStepLabel(stepLabel);
-//
-//        this.restartBtn.addActionListener(e -> {
-//            controller.restartGame();
-//            gamePanel.requestFocusInWindow();//enable key listener
-//        });
-//        this.loadBtn.addActionListener(e -> {
-//            String string = JOptionPane.showInputDialog(this, "Input path:");
-//            System.out.println(string);
-//            gamePanel.requestFocusInWindow();//enable key listener
-//        });
+
         //todo: add other button here
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

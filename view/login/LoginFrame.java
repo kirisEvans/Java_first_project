@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 
 
-
 public class LoginFrame extends JFrame {
 
     public LoginFrame(int width, int height) {
