@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * It is the subclass of ListenerPanel, so that it should implement those four methods: do move left, up, down ,right.
@@ -83,7 +85,7 @@ public class GamePanel extends ListenerPanel {
                 }
             }
         }
-
+        this.revalidate();
         this.repaint();
     }
 
@@ -154,7 +156,65 @@ public class GamePanel extends ListenerPanel {
         this.steps++;
         this.stepLabel.setText(String.format("步数: %d", this.steps));
         if (controller.isBe_success()) {
-            JOptionPane.showMessageDialog(controller.getGameFrame(), "恭喜成功！");
+            controller.setBe_success(false);
+            JDialog dialog = new JDialog(controller.getGameFrame(), "提示", true);
+            dialog.setSize((int) (getWidth() / 1.5), (int) (getHeight() / 3.5));
+            dialog.setLocationRelativeTo(controller.getGameFrame());
+            dialog.setUndecorated(true); // 去边框
+
+            // 加载背景图片
+            ImageIcon icon = new ImageIcon("Resources/victory.png");
+            Image img = icon.getImage().getScaledInstance((int) (getWidth() / 1.5), (int) (getHeight() / 3.5), Image.SCALE_SMOOTH);
+            ImageIcon backgroundIcon = new ImageIcon(img);
+            JLabel background = new JLabel(backgroundIcon);
+            background.setLayout(new BorderLayout()); // 可在上面放东西
+
+            // 半透明遮罩面板（为了让文字更清晰）
+            JPanel overlay = new JPanel(new BorderLayout());
+            overlay.setOpaque(false);
+            overlay.setBorder(BorderFactory.createEmptyBorder((int) (getWidth()/25.6), getWidth()/12, getWidth()/20, (int) (getWidth()/12.8)));
+
+            // 消息文字
+            JLabel messageLabel = new JLabel("恭喜胜利", SwingConstants.CENTER);
+            messageLabel.setFont(new Font("微软雅黑", Font.BOLD, getWidth() / 18));
+            messageLabel.setForeground(Color.WHITE);
+            overlay.add(messageLabel, BorderLayout.NORTH);
+
+            // 确定按钮
+            JButton button = new JButton("返回主页");
+            button.setFont(new Font("微软雅黑", Font.PLAIN, getWidth() / 28));
+            button.setFocusPainted(false);
+            button.setBackground(new Color(0, 120, 215));
+            button.setForeground(Color.WHITE);
+            button.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
+            button.addActionListener(e -> dialog.dispose());
+
+            JButton button1 = new JButton("重新开始");
+            button1.setFont(new Font("微软雅黑", Font.PLAIN, getWidth() / 28));
+            button1.setFocusPainted(false);
+            button1.setBackground(new Color(0, 120, 215));
+            button1.setForeground(Color.WHITE);
+            button1.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
+            button1.addActionListener(e -> {
+                dialog.dispose();
+                stepLabel.setText("步数: 0");
+                steps = 0;
+                clearBoxes();
+                int [][] my_map = deepCopy(MapModel.MAP_1.getCopy());
+                MapModel.MAP_1.setMatrix(my_map);
+                paintGame();
+            });
+
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BorderLayout());
+            buttonPanel.setOpaque(false);
+            buttonPanel.add(button, BorderLayout.WEST);
+            buttonPanel.add(button1, BorderLayout.EAST);
+
+            overlay.add(buttonPanel, BorderLayout.SOUTH);
+            background.add(overlay, BorderLayout.CENTER);
+            dialog.setContentPane(background);
+            dialog.setVisible(true);
         }
     }
 
@@ -181,4 +241,21 @@ public class GamePanel extends ListenerPanel {
     public ArrayList<BoxComponent> getBoxes() {
         return boxes;
     }
+
+    public void clearBoxes() {
+        for (BoxComponent box : boxes) {
+            this.remove(box);
+        }
+        boxes.clear();
+    }
+
+    private int[][] deepCopy(int[][] original) {
+        if (original == null) return null;
+        int[][] copy = new int[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            copy[i] = Arrays.copyOf(original[i], original[i].length);
+        }
+        return copy;
+    }
+
 }

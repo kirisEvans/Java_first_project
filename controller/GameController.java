@@ -176,6 +176,10 @@ public class GameController {
         return be_success;
     }
 
+    public void setBe_success(boolean be_success) {
+        this.be_success = be_success;
+    }
+
     public GameFrame getGameFrame() {
         return gameFrame;
     }
