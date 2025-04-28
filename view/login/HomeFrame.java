@@ -109,7 +109,7 @@ public class HomeFrame extends JFrame {
                     clip.stop();
                     clip.close();
                 } else {
-                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("Resources/Music/ginkaoggs/start_music.wav"));
+                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("Resources/Music/begin and end/start_music.wav"));
                     clip = AudioSystem.getClip();
                     clip.open(audioIn);
                     clip.start();
@@ -118,6 +118,8 @@ public class HomeFrame extends JFrame {
                 ex.printStackTrace();
             }
         });
+
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void updateAllButtons(JButton button_1, JButton button_2, JButton button_3, int frameWidth, int frameHeight) {

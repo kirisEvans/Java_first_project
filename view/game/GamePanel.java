@@ -175,19 +175,22 @@ public class GamePanel extends ListenerPanel {
             overlay.setBorder(BorderFactory.createEmptyBorder((int) (getWidth()/25.6), getWidth()/12, getWidth()/20, (int) (getWidth()/12.8)));
 
             // 消息文字
-            JLabel messageLabel = new JLabel("恭喜胜利", SwingConstants.CENTER);
+            JLabel messageLabel = new JLabel("恭喜通关", SwingConstants.CENTER);
             messageLabel.setFont(new Font("微软雅黑", Font.BOLD, getWidth() / 18));
             messageLabel.setForeground(Color.WHITE);
             overlay.add(messageLabel, BorderLayout.NORTH);
 
             // 确定按钮
-            JButton button = new JButton("返回主页");
+            JButton button = new JButton("结束游戏");
             button.setFont(new Font("微软雅黑", Font.PLAIN, getWidth() / 28));
             button.setFocusPainted(false);
             button.setBackground(new Color(0, 120, 215));
             button.setForeground(Color.WHITE);
             button.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
-            button.addActionListener(e -> dialog.dispose());
+            button.addActionListener(e -> {
+                dialog.dispose();
+                System.exit(0);
+            });
 
             JButton button1 = new JButton("重新开始");
             button1.setFont(new Font("微软雅黑", Font.PLAIN, getWidth() / 28));

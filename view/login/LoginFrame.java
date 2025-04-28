@@ -129,6 +129,7 @@ public class LoginFrame extends JFrame {
             timer.start();
         });
 
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void updateAllLabels(JLabel label_1, JLabel label_2, int frameWidth, int frameHeight) {

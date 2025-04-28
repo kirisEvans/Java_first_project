@@ -140,6 +140,8 @@ public class RegisterFrame extends JFrame {
             username.setText("");
             password.setText("");
         });
+
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void updateAllLabels(JLabel label_1, JLabel label_2, JLabel label_3, int frameWidth, int frameHeight) {
