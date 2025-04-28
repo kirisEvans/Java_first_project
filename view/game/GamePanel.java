@@ -78,6 +78,7 @@ public class GamePanel extends ListenerPanel {
                     map[i][j + 1] = 0;
                     map[i + 1][j + 1] = 0;
                 }
+
                 if (box != null) {
                     box.setLocation(j * grid_size + 2, i * grid_size + 2);
                     boxes.add(box);
@@ -85,6 +86,23 @@ public class GamePanel extends ListenerPanel {
                 }
             }
         }
+
+        JLabel jLabel;
+        int[] my_success_list = MapModel.MAP_1.getSuccess_condition();
+        jLabel = new JLabel("终");
+        jLabel.setForeground(Color.red);
+        Font headline_font = new Font("微软雅黑", Font.BOLD, (int) (grid_size/1.5));
+        jLabel.setFont(headline_font);
+        jLabel.setBounds(my_success_list[1] * grid_size + 12, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
+
+        JLabel jLabel1;
+        jLabel1 = new JLabel("点");
+        jLabel1.setForeground(Color.red);
+        jLabel1.setFont(headline_font);
+        jLabel1.setBounds((my_success_list[1]+1) * grid_size + 10, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
+
+        this.add(jLabel);
+        this.add(jLabel1);
         this.revalidate();
         this.repaint();
     }

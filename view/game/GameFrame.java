@@ -48,11 +48,8 @@ public class GameFrame extends JFrame {
     }
 
     public void updateGamePanel(GamePanel gamePanel, MapModel mapModel, int frameWidth, int frameHeight) {
-        if (frameWidth > 1000) {
-            gamePanel.setGrid_size(frameWidth / 12);
-        } else {
-            gamePanel.setGrid_size(frameWidth / 10);
-        }
+        gamePanel.setGrid_size(frameWidth / 10);
+
 
         gamePanel.removeAll();
         gamePanel.getBoxes().clear();
