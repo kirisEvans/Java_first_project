@@ -3,12 +3,13 @@ package view.game;
 import controller.GameController;
 import model.Direction;
 import model.MapModel;
+import view.login.PictureFrame;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * It is the subclass of ListenerPanel, so that it should implement those four methods: do move left, up, down ,right.
@@ -18,8 +19,8 @@ public class GamePanel extends ListenerPanel {
     private ArrayList<BoxComponent> boxes;
     private MapModel model;
     private GameController controller;
-    private JLabel stepLabel = new JLabel("步数: 0");
-    private int steps = 0;
+    public JLabel stepLabel = new JLabel("步数: 0");
+    public int steps = 0;
     private int grid_size;
     private BoxComponent selectedBox;
 
@@ -270,7 +271,7 @@ public class GamePanel extends ListenerPanel {
         boxes.clear();
     }
 
-    private int[][] deepCopy(int[][] original) {
+    public int[][] deepCopy(int[][] original) {
         if (original == null) return null;
         int[][] copy = new int[original.length][];
         for (int i = 0; i < original.length; i++) {

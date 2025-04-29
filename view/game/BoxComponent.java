@@ -15,7 +15,6 @@ public class BoxComponent extends JComponent {
     private boolean isSelected;
     private Border border;
 
-
     public BoxComponent(String path, int row, int col) {
         // 使用 ImageIcon 加载图片
         try {

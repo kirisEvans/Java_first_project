@@ -78,4 +78,21 @@ public class GameFrame extends JFrame {
         label_1.setFont(font);
     }
 
+    private void restartGame(GamePanel gamePanel) {
+        stepLabel.setText("步数: 0");
+        gamePanel.steps = 0;
+        gamePanel.clearBoxes();
+        int [][] my_map = gamePanel.deepCopy(MapModel.MAP_1.getCopy());
+        MapModel.MAP_1.setMatrix(my_map);
+        gamePanel.paintGame();
+    }
+
+    public void loadGame() {
+
+    }
+
+    public void saveGame() {
+
+    }
+
 }

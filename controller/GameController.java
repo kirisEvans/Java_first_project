@@ -23,10 +23,6 @@ public class GameController {
         view.setController(this);
     }
 
-    public void restartGame() {
-        System.out.println("Do restart game here");
-    }
-
     public boolean doMove(int row, int col, Direction direction) {
         boolean be_executed = false;
         if (model.getId(row, col) == 1) {
