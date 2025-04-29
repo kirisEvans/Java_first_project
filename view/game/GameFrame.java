@@ -7,18 +7,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Arrays;
 
 public class GameFrame extends JFrame {
     private GameController controller;
     private MapModel mapModel;
     private JLabel stepLabel;
     private GamePanel gamePanel;
+    private String name;
 
     public GameFrame(int width, int height, MapModel mapModel, String name) {
         this.setTitle("游戏界面");
         this.setLayout(null);
         this.setSize(width, height);
         this.mapModel = mapModel;
+        this.name = name;
 
         PictureFrame pictureFrame = new PictureFrame("Resources/game.png", 0.25f, getWidth(), getHeight());
         JPanel backgroundPanel = pictureFrame.getBackground();
@@ -88,15 +95,76 @@ public class GameFrame extends JFrame {
     }
 
     public void loadGame() {
+        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";;
+        String dbUser = "root";
+        String dbPassword = "Zwh317318319,";
 
+        try {
+            // 连接数据库
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+            String sql = "SELECT map_1 FROM project_1 WHERE name = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            String arrayString = rs.getString("map_1");
+
+            String[] rows = arrayString.split(";");
+            int[][] newArray2D = new int[rows.length][];
+
+            for (int i = 0; i < rows.length; i++) {
+                String[] columns = rows[i].split(",");
+                newArray2D[i] = new int[columns.length];
+                for (int j = 0; j < columns.length; j++) {
+                    newArray2D[i][j] = Integer.parseInt(columns[j]);
+                }
+            }
+            rs.close();
+            ps.close();
+            conn.close();
+
+            MapModel.MAP_1.setMatrix(newArray2D);
+            gamePanel.paintGame();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "数据库连接出错！\n" +
+                            "错误类型: " + ex.getClass().getSimpleName() + "\n" +
+                            "详细信息: " + ex.getMessage()
+            );
+        }
     }
 
     public void saveGame() {
+        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";;
+        String dbUser = "root";
+        String dbPassword = "Zwh317318319,";
 
+        try {
+            // 连接数据库
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+            String sql = "UPDATE project_1 SET map_1 = ? WHERE name = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, Arrays.deepToString(MapModel.MAP_1.getMatrix()));
+            ps.setString(2, name);
+            int rs = ps.executeUpdate();
+
+            ps.close();
+            conn.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "数据库连接出错！\n" +
+                            "错误类型: " + ex.getClass().getSimpleName() + "\n" +
+                            "详细信息: " + ex.getMessage()
+            );
+        }
     }
 
     public void endGame() {
         System.exit(0);
     }
-
 }

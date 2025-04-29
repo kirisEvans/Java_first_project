@@ -105,7 +105,7 @@ public class LoginFrame extends JFrame {
 
                 rs.close();
                 ps.close();
-
+                conn.close();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this,
