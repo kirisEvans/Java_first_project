@@ -14,7 +14,7 @@ public class GameFrame extends JFrame {
     private JLabel stepLabel;
     private GamePanel gamePanel;
 
-    public GameFrame(int width, int height, MapModel mapModel) {
+    public GameFrame(int width, int height, MapModel mapModel, String name) {
         this.setTitle("游戏界面");
         this.setLayout(null);
         this.setSize(width, height);
@@ -93,6 +93,10 @@ public class GameFrame extends JFrame {
 
     public void saveGame() {
 
+    }
+
+    public void endGame() {
+        System.exit(0);
     }
 
 }

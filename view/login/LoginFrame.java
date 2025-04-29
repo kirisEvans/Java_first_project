@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 
 public class LoginFrame extends JFrame {
-
+    private String name;
     public LoginFrame(int width, int height) {
         this.setTitle("登录界面");
         this.setLayout(null);
@@ -66,7 +66,7 @@ public class LoginFrame extends JFrame {
 
 
         login.addActionListener(e -> {
-            String name = username.getText();
+            this.name = username.getText();
             String secret = password.getText();
 
             String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";;
@@ -92,7 +92,7 @@ public class LoginFrame extends JFrame {
                     Point currentLocation = this.getLocationOnScreen();
                     this.dispose(); // 隐藏当前界面
                     MapModel mapModel = MapModel.MAP_1;
-                    GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel);
+                    GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, name);
                     gameFrame.setLocation(currentLocation);
                     gameFrame.setVisible(true); // 显示新界面
                     //
@@ -105,7 +105,7 @@ public class LoginFrame extends JFrame {
 
                 rs.close();
                 ps.close();
-                conn.close();
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this,

@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 
 public class RegisterFrame extends JFrame {
-    public String name;
     public RegisterFrame(int width, int height) {
         this.setTitle("注册界面");
         this.setLayout(null);
@@ -68,7 +67,7 @@ public class RegisterFrame extends JFrame {
 
 
         registerBtn.addActionListener(e -> {
-            this.name = username.getText();
+            String name = username.getText();
             String secret = password.getText();
 
             String url = "jdbc:mysql://localhost:3306/game?allowPublicKeyRetrieval=true&useSSL=false";
@@ -126,7 +125,7 @@ public class RegisterFrame extends JFrame {
 
                 rs.close();
                 checkPs.close();
-
+                conn.close();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this,
