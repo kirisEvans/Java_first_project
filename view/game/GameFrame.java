@@ -52,33 +52,12 @@ public class GameFrame extends JFrame {
         updateAllLabels(stepLabel, getWidth(), getHeight());
         backgroundPanel.add(stepLabel);
 
-
-
-
-        saveBtn.addActionListener(e -> saveGame());
-        backgroundPanel.add(saveBtn);
-
-        loadBtn.addActionListener(e ->loadGame());
-        backgroundPanel.add(loadBtn);
-
-        restartBtn.addActionListener(e ->restartGame(gamePanel));
-        backgroundPanel.add(restartBtn);
-
-        endBtn.addActionListener(e ->endGame());
-        backgroundPanel.add(endBtn);
-
-        musicBtn.addActionListener(e ->endMusic());
-        backgroundPanel.add(musicBtn);
-
         updateAllButtons(saveBtn,loadBtn,restartBtn,endBtn,musicBtn,getWidth(), getHeight());
-
-
-
-
-
-
-
-
+        backgroundPanel.add(saveBtn);
+        backgroundPanel.add(loadBtn);
+        backgroundPanel.add(restartBtn);
+        backgroundPanel.add(endBtn);
+        backgroundPanel.add(musicBtn);
 
 
 
@@ -90,7 +69,7 @@ public class GameFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 updateGamePanel(gamePanel, mapModel, getWidth(), getHeight());
                 updateAllLabels(stepLabel, getWidth(), getHeight());
-                updateAllButtons(saveBtn,loadBtn,restartBtn,endBtn,musicBtn,getWidth(), getHeight());
+                updateAllButtons(saveBtn, loadBtn, restartBtn, endBtn, musicBtn,getWidth(), getHeight());
             }
         });
         this.controller = new GameController(this, gamePanel, mapModel);
@@ -132,17 +111,18 @@ public class GameFrame extends JFrame {
 
     private void updateAllButtons(JButton button_1, JButton button_2, JButton button_3,JButton button_4,JButton button_5,int frameWidth, int frameHeight) {
         int btnWidth = frameWidth / 4;
-        int btnHeight = frameHeight / 16;
-        int centerX = (frameWidth - btnWidth) / 4;  //横坐标
-        int startY = frameHeight / 5;  //纵坐标
+        int btnHeight = frameHeight / 20;
+        int centerX = (frameWidth - btnWidth) / 6;  //横坐标
+        int startY = (int) (frameHeight / 2.2);  //纵坐标
+        int spacing = btnHeight / 2;
 
         // 设置每个按钮的位置
         button_1.setBounds(centerX, startY, btnWidth, btnHeight);
-        button_2.setBounds(centerX, (int)(startY+ 0.5 * btnWidth), btnWidth, btnHeight);
-        button_3.setBounds(centerX, (int)(startY+ btnWidth),  btnWidth, btnHeight);
-        button_4.setBounds(centerX, (int)(startY+ 1.5 * btnWidth), btnWidth, btnHeight);
-        button_5.setBounds(centerX, (int)(startY+ 2 * btnWidth),  btnWidth, btnHeight);
-        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 43);
+        button_2.setBounds(centerX, startY + btnHeight + spacing, btnWidth, btnHeight);
+        button_3.setBounds(centerX, startY+ 2 * (btnHeight + spacing),  btnWidth, btnHeight);
+        button_4.setBounds(centerX, startY+ 3 * (btnHeight + spacing), btnWidth, btnHeight);
+        button_5.setBounds(centerX, startY+ 4 * (btnHeight + spacing),  btnWidth, btnHeight);
+        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 50);
         button_1.setFont(font);
         button_2.setFont(font);
         button_3.setFont(font);
