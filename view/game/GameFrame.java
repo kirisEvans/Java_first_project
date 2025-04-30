@@ -1,17 +1,14 @@
 package view.game;
 
 import controller.GameController;
+import controller.GameMusic;
 import model.MapModel;
 import view.login.PictureFrame;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,12 +22,6 @@ public class GameFrame extends JFrame {
     private GamePanel gamePanel;
     private String name;
     private Clip clip;
-
-    private JButton saveBtn = new JButton("保存");
-    private JButton restartBtn = new JButton("重新游戏");
-    private JButton loadBtn = new JButton("载入");
-    private JButton endBtn = new JButton("结束游戏");
-    private JButton musicBtn = new JButton("音乐开关");
 
     public GameFrame(int width, int height, MapModel mapModel, String name, Clip clip) {
         this.setTitle("游戏界面");
@@ -52,6 +43,11 @@ public class GameFrame extends JFrame {
         updateAllLabels(stepLabel, getWidth(), getHeight());
         backgroundPanel.add(stepLabel);
 
+        JButton saveBtn = new JButton("保存游戏");
+        JButton restartBtn = new JButton("重新游戏");
+        JButton loadBtn = new JButton("载入游戏");
+        JButton endBtn = new JButton("结束游戏");
+        JButton musicBtn = new JButton("音乐停止");
         updateAllButtons(saveBtn,loadBtn,restartBtn,endBtn,musicBtn,getWidth(), getHeight());
         backgroundPanel.add(saveBtn);
         backgroundPanel.add(loadBtn);
@@ -59,9 +55,9 @@ public class GameFrame extends JFrame {
         backgroundPanel.add(endBtn);
         backgroundPanel.add(musicBtn);
 
-
-
-
+        for (JButton btn : Arrays.asList(saveBtn,loadBtn,restartBtn,endBtn,musicBtn)) {
+            btn.setFocusPainted(false);         // 取消焦点虚线框
+        }
 
         // 窗口缩放监听器
         addComponentListener(new ComponentAdapter() {
@@ -73,6 +69,13 @@ public class GameFrame extends JFrame {
             }
         });
         this.controller = new GameController(this, gamePanel, mapModel);
+
+        restartBtn.addActionListener(e -> restartGame(gamePanel));
+        endBtn.addActionListener(e -> endGame());
+        musicBtn.addActionListener(e -> endMusic(musicBtn));
+
+
+
 
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -99,13 +102,13 @@ public class GameFrame extends JFrame {
 
     private void updateAllLabels(JLabel label_1, int frameWidth, int frameHeight) {
         int btnWidth = frameWidth / 4;
-        int btnHeight = frameHeight / 20;
+        int btnHeight = frameHeight / 15;
         int centerX = (frameWidth - btnWidth) / 4;  //横坐标
         int startY = frameHeight / 3;  //纵坐标
 
         // 设置每个按钮的位置
         label_1.setBounds(centerX, startY, btnWidth, btnHeight);
-        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 30);
+        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 20);
         label_1.setFont(font);
     }
 
@@ -134,9 +137,14 @@ public class GameFrame extends JFrame {
         stepLabel.setText("步数: 0");
         gamePanel.steps = 0;
         gamePanel.clearBoxes();
+        JLabel[] jLabel_list = gamePanel.getjLabel_list();
+        gamePanel.remove(jLabel_list[0]);
+        gamePanel.remove(jLabel_list[1]);
         int [][] my_map = gamePanel.deepCopy(MapModel.MAP_1.getCopy());
         MapModel.MAP_1.setMatrix(my_map);
         gamePanel.paintGame();
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
     }
 
     public void loadGame() {
@@ -213,16 +221,15 @@ public class GameFrame extends JFrame {
         System.exit(0);
     }
 
-    public void endMusic() {
+    public void endMusic(JButton musicBtn) {
         try {
             if (clip != null && clip.isRunning()) {
                 clip.stop();
                 clip.close();
+                musicBtn.setText("音乐打开");
             } else {
-                AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("Resources/Music/begin and end/start_music.wav"));
-                clip = AudioSystem.getClip();
-                clip.open(audioIn);
-                clip.start();
+                GameMusic gameMusic = new GameMusic("Resources/Music/game");
+                musicBtn.setText("音乐停止");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

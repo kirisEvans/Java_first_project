@@ -27,7 +27,7 @@ public class HomeFrame extends JFrame {
         // 添加按钮
         JButton userBtn = new JButton("用户登录");
         JButton guestBtn = new JButton("游客登录");
-        JButton musicBtn = new JButton("音乐开关");
+        JButton musicBtn = new JButton("音乐停止");
         Font font = new Font("微软雅黑", Font.BOLD, getHeight() / 43);
         userBtn.setFont(font);
         guestBtn.setFont(font);
@@ -90,6 +90,10 @@ public class HomeFrame extends JFrame {
         guestBtn.addActionListener(e -> {
             // 加一个短暂延迟（例如 300ms）
             Timer timer = new Timer(300, event -> {
+                if (clip != null && clip.isRunning()) {
+                    clip.stop();
+                    clip.close();
+                }
                 GameMusic gameMusic = new GameMusic("Resources/Music/game");
 
                 Point currentLocation = this.getLocationOnScreen();
@@ -108,11 +112,13 @@ public class HomeFrame extends JFrame {
                 if (clip != null && clip.isRunning()) {
                     clip.stop();
                     clip.close();
+                    musicBtn.setText("音乐打开");
                 } else {
                     AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("Resources/Music/begin and end/start_music.wav"));
                     clip = AudioSystem.getClip();
                     clip.open(audioIn);
                     clip.start();
+                    musicBtn.setText("音乐停止");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

@@ -19,11 +19,6 @@ public class GameMusic {
         File folder = new File(path);
         File[] files = folder.listFiles();
 
-        if (HomeFrame.clip != null && HomeFrame.clip.isRunning()) {
-            HomeFrame.clip.stop();
-            HomeFrame.clip.close();
-        }
-
         if (files == null || files.length == 0) {
             JOptionPane.showMessageDialog(null, "找不到任何音乐文件！", "错误", JOptionPane.ERROR_MESSAGE);
         } else {

@@ -3,18 +3,12 @@ package view.game;
 import controller.GameController;
 import model.Direction;
 import model.MapModel;
-import view.login.PictureFrame;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * It is the subclass of ListenerPanel, so that it should implement those four methods: do move left, up, down ,right.
- * The class contains a grids, which is the corresponding GUI view of the matrix variable in MapMatrix.
- */
 public class GamePanel extends ListenerPanel {
     private ArrayList<BoxComponent> boxes;
     private MapModel model;
@@ -23,6 +17,7 @@ public class GamePanel extends ListenerPanel {
     public int steps = 0;
     private int grid_size;
     private BoxComponent selectedBox;
+    private JLabel[] jLabel_list;
 
     public GamePanel(MapModel model, int width) {
         this.grid_size = width / 10;
@@ -87,22 +82,10 @@ public class GamePanel extends ListenerPanel {
             }
         }
 
-        JLabel jLabel;
-        int[] my_success_list = MapModel.MAP_1.getSuccess_condition();
-        jLabel = new JLabel("终");
-        jLabel.setForeground(Color.red);
-        Font headline_font = new Font("微软雅黑", Font.BOLD, (int) (grid_size/1.5));
-        jLabel.setFont(headline_font);
-        jLabel.setBounds(my_success_list[1] * grid_size + 12, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
+        this.jLabel_list = setJlabel();
 
-        JLabel jLabel1;
-        jLabel1 = new JLabel("点");
-        jLabel1.setForeground(Color.red);
-        jLabel1.setFont(headline_font);
-        jLabel1.setBounds((my_success_list[1]+1) * grid_size + 10, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
-
-        this.add(jLabel);
-        this.add(jLabel1);
+        this.add(jLabel_list[0]);
+        this.add(jLabel_list[1]);
         this.revalidate();
         this.repaint();
     }
@@ -190,7 +173,7 @@ public class GamePanel extends ListenerPanel {
             // 半透明遮罩面板（为了让文字更清晰）
             JPanel overlay = new JPanel(new BorderLayout());
             overlay.setOpaque(false);
-            overlay.setBorder(BorderFactory.createEmptyBorder((int) (getWidth()/25.6), getWidth()/12, getWidth()/20, (int) (getWidth()/12.8)));
+            overlay.setBorder(BorderFactory.createEmptyBorder((int) (getWidth() / 25.6), getWidth() / 12, getWidth() / 20, (int) (getWidth() / 12.8)));
 
             // 消息文字
             JLabel messageLabel = new JLabel("恭喜通关", SwingConstants.CENTER);
@@ -221,7 +204,9 @@ public class GamePanel extends ListenerPanel {
                 stepLabel.setText("步数: 0");
                 steps = 0;
                 clearBoxes();
-                int [][] my_map = deepCopy(MapModel.MAP_1.getCopy());
+                int[][] my_map = deepCopy(MapModel.MAP_1.getCopy());
+                this.remove(jLabel_list[0]);
+                this.remove(jLabel_list[1]);
                 MapModel.MAP_1.setMatrix(my_map);
                 paintGame();
             });
@@ -277,5 +262,26 @@ public class GamePanel extends ListenerPanel {
             copy[i] = Arrays.copyOf(original[i], original[i].length);
         }
         return copy;
+    }
+
+    public JLabel[] setJlabel() {
+        JLabel jLabel;
+        int[] my_success_list = MapModel.MAP_1.getSuccess_condition();
+        jLabel = new JLabel("终");
+        jLabel.setForeground(Color.red);
+        Font headline_font = new Font("微软雅黑", Font.BOLD, (int) (grid_size/1.5));
+        jLabel.setFont(headline_font);
+        jLabel.setBounds(my_success_list[1] * grid_size + 12, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
+
+        JLabel jLabel1;
+        jLabel1 = new JLabel("点");
+        jLabel1.setForeground(Color.red);
+        jLabel1.setFont(headline_font);
+        jLabel1.setBounds((my_success_list[1]+1) * grid_size + 10, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
+        return new JLabel[]{jLabel, jLabel1};
+    }
+
+    public JLabel[] getjLabel_list() {
+        return jLabel_list;
     }
 }
