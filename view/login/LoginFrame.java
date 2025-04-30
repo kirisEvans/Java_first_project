@@ -3,6 +3,8 @@ package view.login;
 import controller.GameMusic;
 import model.MapModel;
 import view.game.GameFrame;
+
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -16,6 +18,7 @@ import java.util.Arrays;
 
 public class LoginFrame extends JFrame {
     private String name;
+    private Clip clip;
     public LoginFrame(int width, int height) {
         this.setTitle("登录界面");
         this.setLayout(null);
@@ -69,7 +72,7 @@ public class LoginFrame extends JFrame {
             this.name = username.getText();
             String secret = password.getText();
 
-            String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";;
+            String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
             String dbUser = "root";
             String dbPassword = "Zwh317318319,";
 
@@ -88,11 +91,11 @@ public class LoginFrame extends JFrame {
                     JOptionPane.showMessageDialog(this, "登录成功！");
                     //
                     GameMusic gameMusic = new GameMusic("Resources/Music/game");
-
+                    clip = gameMusic.getClip();
                     Point currentLocation = this.getLocationOnScreen();
                     this.dispose(); // 隐藏当前界面
                     MapModel mapModel = MapModel.MAP_1;
-                    GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, name);
+                    GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, name, clip);
                     gameFrame.setLocation(currentLocation);
                     gameFrame.setVisible(true); // 显示新界面
                     //

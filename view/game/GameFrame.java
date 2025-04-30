@@ -3,10 +3,15 @@ package view.game;
 import controller.GameController;
 import model.MapModel;
 import view.login.PictureFrame;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,13 +24,21 @@ public class GameFrame extends JFrame {
     private JLabel stepLabel;
     private GamePanel gamePanel;
     private String name;
+    private Clip clip;
 
-    public GameFrame(int width, int height, MapModel mapModel, String name) {
+    private JButton saveBtn = new JButton("保存");
+    private JButton restartBtn = new JButton("重新游戏");
+    private JButton loadBtn = new JButton("载入");
+    private JButton endBtn = new JButton("结束游戏");
+    private JButton musicBtn = new JButton("音乐开关");
+
+    public GameFrame(int width, int height, MapModel mapModel, String name, Clip clip) {
         this.setTitle("游戏界面");
         this.setLayout(null);
         this.setSize(width, height);
         this.mapModel = mapModel;
         this.name = name;
+        this.clip = clip;
 
         PictureFrame pictureFrame = new PictureFrame("Resources/game.png", 0.25f, getWidth(), getHeight());
         JPanel backgroundPanel = pictureFrame.getBackground();
@@ -39,17 +52,49 @@ public class GameFrame extends JFrame {
         updateAllLabels(stepLabel, getWidth(), getHeight());
         backgroundPanel.add(stepLabel);
 
+
+
+
+        saveBtn.addActionListener(e -> saveGame());
+        backgroundPanel.add(saveBtn);
+
+        loadBtn.addActionListener(e ->loadGame());
+        backgroundPanel.add(loadBtn);
+
+        restartBtn.addActionListener(e ->restartGame(gamePanel));
+        backgroundPanel.add(restartBtn);
+
+        endBtn.addActionListener(e ->endGame());
+        backgroundPanel.add(endBtn);
+
+        musicBtn.addActionListener(e ->endMusic());
+        backgroundPanel.add(musicBtn);
+
+        updateAllButtons(saveBtn,loadBtn,restartBtn,endBtn,musicBtn,getWidth(), getHeight());
+
+
+
+
+
+
+
+
+
+
+
+
+
         // 窗口缩放监听器
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 updateGamePanel(gamePanel, mapModel, getWidth(), getHeight());
                 updateAllLabels(stepLabel, getWidth(), getHeight());
+                updateAllButtons(saveBtn,loadBtn,restartBtn,endBtn,musicBtn,getWidth(), getHeight());
             }
         });
         this.controller = new GameController(this, gamePanel, mapModel);
 
-        //todo: add other button here
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
@@ -84,6 +129,26 @@ public class GameFrame extends JFrame {
         Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 30);
         label_1.setFont(font);
     }
+
+    private void updateAllButtons(JButton button_1, JButton button_2, JButton button_3,JButton button_4,JButton button_5,int frameWidth, int frameHeight) {
+        int btnWidth = frameWidth / 4;
+        int btnHeight = frameHeight / 16;
+        int centerX = (frameWidth - btnWidth) / 4;  //横坐标
+        int startY = frameHeight / 5;  //纵坐标
+
+        // 设置每个按钮的位置
+        button_1.setBounds(centerX, startY, btnWidth, btnHeight);
+        button_2.setBounds(centerX, (int)(startY+ 0.5 * btnWidth), btnWidth, btnHeight);
+        button_3.setBounds(centerX, (int)(startY+ btnWidth),  btnWidth, btnHeight);
+        button_4.setBounds(centerX, (int)(startY+ 1.5 * btnWidth), btnWidth, btnHeight);
+        button_5.setBounds(centerX, (int)(startY+ 2 * btnWidth),  btnWidth, btnHeight);
+        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 43);
+        button_1.setFont(font);
+        button_2.setFont(font);
+        button_3.setFont(font);
+        button_4.setFont(font);
+        button_5.setFont(font);
+    }//改了
 
     private void restartGame(GamePanel gamePanel) {
         stepLabel.setText("步数: 0");
@@ -167,4 +232,22 @@ public class GameFrame extends JFrame {
     public void endGame() {
         System.exit(0);
     }
+
+    public void endMusic() {
+        try {
+            if (clip != null && clip.isRunning()) {
+                clip.stop();
+                clip.close();
+            } else {
+                AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("Resources/Music/begin and end/start_music.wav"));
+                clip = AudioSystem.getClip();
+                clip.open(audioIn);
+                clip.start();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 }

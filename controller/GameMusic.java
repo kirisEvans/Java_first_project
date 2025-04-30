@@ -137,4 +137,8 @@ public class GameMusic {
             }
         }
     }
+
+    public Clip getClip() {
+        return this.clip;
+    }
 }

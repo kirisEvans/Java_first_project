@@ -179,7 +179,4 @@ public class GameController {
     public GameFrame getGameFrame() {
         return gameFrame;
     }
-
-    //todo: add other methods such as loadGame, saveGame...
-
 }

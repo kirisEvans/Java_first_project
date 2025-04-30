@@ -24,7 +24,6 @@ public class GamePanel extends ListenerPanel {
     private int grid_size;
     private BoxComponent selectedBox;
 
-
     public GamePanel(MapModel model, int width) {
         this.grid_size = width / 10;
         boxes = new ArrayList<>();
@@ -279,5 +278,4 @@ public class GamePanel extends ListenerPanel {
         }
         return copy;
     }
-
 }

@@ -95,7 +95,7 @@ public class HomeFrame extends JFrame {
                 Point currentLocation = this.getLocationOnScreen();
                 this.dispose(); // 隐藏当前界面
                 MapModel mapModel = MapModel.MAP_1;
-                GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, null);
+                GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, null, gameMusic.getClip());
                 gameFrame.setLocation(currentLocation);
                 gameFrame.setVisible(true); // 显示新界面
             });
