@@ -98,7 +98,7 @@ public class LoginFrame extends JFrame {
                     Point currentLocation = this.getLocationOnScreen();
                     this.dispose(); // 隐藏当前界面
                     MapModel mapModel = MapModel.MAP_1;
-                    GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, name, clip);
+                    GameFrame gameFrame = new GameFrame(getWidth(), getHeight(), mapModel, name, gameMusic);
                     gameFrame.setLocation(currentLocation);
                     gameFrame.setVisible(true); // 显示新界面
                     //

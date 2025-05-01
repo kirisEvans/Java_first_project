@@ -22,14 +22,16 @@ public class GameFrame extends JFrame {
     private GamePanel gamePanel;
     private String name;
     private Clip clip;
+    private GameMusic gameMusic;
 
-    public GameFrame(int width, int height, MapModel mapModel, String name, Clip clip) {
+    public GameFrame(int width, int height, MapModel mapModel, String name, GameMusic gameMusic) {
         this.setTitle("游戏界面");
         this.setLayout(null);
         this.setSize(width, height);
         this.mapModel = mapModel;
         this.name = name;
-        this.clip = clip;
+        this.clip = gameMusic.getClip();
+        this.gameMusic = gameMusic;
 
         PictureFrame pictureFrame = new PictureFrame("Resources/game.png", 0.25f, getWidth(), getHeight());
         JPanel backgroundPanel = pictureFrame.getBackground();
@@ -70,8 +72,8 @@ public class GameFrame extends JFrame {
         });
         this.controller = new GameController(this, gamePanel, mapModel);
 
-        saveBtn.addActionListener(e -> saveGame());
-        loadBtn.addActionListener(e -> loadGame());
+        saveBtn.addActionListener(e -> saveGame(gamePanel));
+        loadBtn.addActionListener(e -> loadGame(gamePanel));
         restartBtn.addActionListener(e -> restartGame(gamePanel));
         endBtn.addActionListener(e -> endGame());
         musicBtn.addActionListener(e -> endMusic(musicBtn));
@@ -113,7 +115,7 @@ public class GameFrame extends JFrame {
 
         // 设置每个按钮的位置
         label_1.setBounds(centerX, startY, btnWidth, btnHeight);
-        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 20);
+        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 30);
         label_1.setFont(font);
     }
 
@@ -152,7 +154,7 @@ public class GameFrame extends JFrame {
         gamePanel.requestFocusInWindow();
     }
 
-    public void loadGame() {
+    public void loadGame(GamePanel gamePanel) {
         String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         String dbUser = "root";
         String dbPassword = "Zwh317318319,";
@@ -161,28 +163,44 @@ public class GameFrame extends JFrame {
             // 连接数据库
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
-            String sql = "SELECT map_1 FROM project_1 WHERE name = ?";
+            String sql = "SELECT map_1, steps FROM project_1 WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
-            String arrayString = rs.getString("map_1");
-
-            String[] rows = arrayString.split(";");
-            int[][] newArray2D = new int[rows.length][];
-
-            for (int i = 0; i < rows.length; i++) {
-                String[] columns = rows[i].split(",");
-                newArray2D[i] = new int[columns.length];
-                for (int j = 0; j < columns.length; j++) {
-                    newArray2D[i][j] = Integer.parseInt(columns[j]);
-                }
+            String arrayString = null;
+            int steps = 0;
+            if (rs.next()) {
+                arrayString = rs.getString("map_1");
+                steps = rs.getInt("steps");
             }
+            if (arrayString != null) {
+                arrayString = arrayString.substring(2, arrayString.length() - 2);
+                String[] rows = arrayString.split("], \\[");
+                int[][] newArray2D = new int[rows.length][];
+
+                for (int i = 0; i < rows.length; i++) {
+                    String[] columns = rows[i].split(", ");
+                    newArray2D[i] = new int[columns.length];
+                    for (int j = 0; j < columns.length; j++) {
+                        newArray2D[i][j] = Integer.parseInt(columns[j]);
+                    }
+                }
+                gamePanel.steps = steps;
+                stepLabel.setText(String.format("步数: %d", steps));
+                MapModel.MAP_1.setMatrix(newArray2D);
+                gamePanel.clearBoxes();
+                JLabel[] jLabel_list = gamePanel.getjLabel_list();
+                gamePanel.remove(jLabel_list[0]);
+                gamePanel.remove(jLabel_list[1]);
+                gamePanel.paintGame();
+                gamePanel.setFocusable(true);
+                gamePanel.requestFocusInWindow();
+            }
+
+
             rs.close();
             ps.close();
             conn.close();
-
-            MapModel.MAP_1.setMatrix(newArray2D);
-            gamePanel.paintGame();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -194,7 +212,7 @@ public class GameFrame extends JFrame {
         }
     }
 
-    public void saveGame() {
+    public void saveGame(GamePanel gamePanel) {
         String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         String dbUser = "root";
         String dbPassword = "Zwh317318319,";
@@ -203,14 +221,17 @@ public class GameFrame extends JFrame {
             // 连接数据库
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
-            String sql = "UPDATE project_1 SET map_1 = ? WHERE username = ?";
+            String sql = "UPDATE project_1 SET map_1 = ?, steps = ? WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, Arrays.deepToString(MapModel.MAP_1.getMatrix()));
-            ps.setString(2, name);
+            ps.setInt(2, gamePanel.steps);
+            ps.setString(3, name);
             int rs = ps.executeUpdate();
 
             ps.close();
             conn.close();
+            gamePanel.setFocusable(true);
+            gamePanel.requestFocusInWindow();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -230,19 +251,19 @@ public class GameFrame extends JFrame {
         try {
             if (clip != null && clip.isRunning()) {
                 clip.stop();
-//                clip.close();
+                gameMusic.setStopping(true);
                 musicBtn.setText("音乐打开");
             } else {
-//                GameMusic gameMusic = new GameMusic("Resources/Music/game");
+
                 if (clip != null) {
                     clip.start();
                 }
                 musicBtn.setText("音乐停止");
             }
+            gamePanel.setFocusable(true);
+            gamePanel.requestFocusInWindow();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-
 }

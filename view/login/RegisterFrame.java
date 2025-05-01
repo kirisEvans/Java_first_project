@@ -154,11 +154,12 @@ public class RegisterFrame extends JFrame {
         // 设置每个按钮的位置
         label_1.setBounds(centerX, startY, btnWidth, btnHeight);
         label_2.setBounds(centerX, startY + btnHeight + spacing, btnWidth, btnHeight);
-        label_3.setBounds(centerX + btnHeight, startY - 2 * spacing - 2 *  btnHeight, btnWidth * 3, btnHeight * 3);
+        label_3.setBounds(centerX, startY - 2 * spacing - 2 *  btnHeight, btnWidth * 3, btnHeight * 3);
         Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 43);
         Font headline_font = new Font("微软雅黑", Font.BOLD, getHeight() / 20);
         label_1.setHorizontalAlignment(SwingConstants.RIGHT);  // 右对齐
-        label_2.setHorizontalAlignment(SwingConstants.RIGHT);  // 右对齐
+        label_2.setHorizontalAlignment(SwingConstants.RIGHT);
+        label_3.setHorizontalAlignment(SwingConstants.CENTER);
         label_1.setFont(font);
         label_2.setFont(font);
         label_3.setFont(headline_font);
