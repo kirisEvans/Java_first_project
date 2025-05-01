@@ -70,11 +70,16 @@ public class GameFrame extends JFrame {
         });
         this.controller = new GameController(this, gamePanel, mapModel);
 
+        saveBtn.addActionListener(e -> saveGame());
+        loadBtn.addActionListener(e -> loadGame());
         restartBtn.addActionListener(e -> restartGame(gamePanel));
         endBtn.addActionListener(e -> endGame());
         musicBtn.addActionListener(e -> endMusic(musicBtn));
 
-
+        if (name == null) {
+            saveBtn.setEnabled(false);
+            loadBtn.setEnabled(false);
+        }
 
 
         this.setLocationRelativeTo(null);
@@ -148,7 +153,7 @@ public class GameFrame extends JFrame {
     }
 
     public void loadGame() {
-        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";;
+        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         String dbUser = "root";
         String dbPassword = "Zwh317318319,";
 
@@ -190,7 +195,7 @@ public class GameFrame extends JFrame {
     }
 
     public void saveGame() {
-        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";;
+        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         String dbUser = "root";
         String dbPassword = "Zwh317318319,";
 
@@ -198,7 +203,7 @@ public class GameFrame extends JFrame {
             // 连接数据库
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
-            String sql = "UPDATE project_1 SET map_1 = ? WHERE name = ?";
+            String sql = "UPDATE project_1 SET map_1 = ? WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, Arrays.deepToString(MapModel.MAP_1.getMatrix()));
             ps.setString(2, name);
@@ -225,10 +230,13 @@ public class GameFrame extends JFrame {
         try {
             if (clip != null && clip.isRunning()) {
                 clip.stop();
-                clip.close();
+//                clip.close();
                 musicBtn.setText("音乐打开");
             } else {
-                GameMusic gameMusic = new GameMusic("Resources/Music/game");
+//                GameMusic gameMusic = new GameMusic("Resources/Music/game");
+                if (clip != null) {
+                    clip.start();
+                }
                 musicBtn.setText("音乐停止");
             }
         } catch (Exception ex) {

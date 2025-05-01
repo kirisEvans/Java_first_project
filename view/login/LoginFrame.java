@@ -89,7 +89,10 @@ public class LoginFrame extends JFrame {
                 if (rs.next()) {
                     // 登录成功
                     JOptionPane.showMessageDialog(this, "登录成功！");
-                    //
+                    if (HomeFrame.clip != null && HomeFrame.clip.isRunning()) {
+                        HomeFrame.clip.stop();
+                        HomeFrame.clip.close();
+                    }
                     GameMusic gameMusic = new GameMusic("Resources/Music/game");
                     clip = gameMusic.getClip();
                     Point currentLocation = this.getLocationOnScreen();

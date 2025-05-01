@@ -74,9 +74,9 @@ public class HomeFrame extends JFrame {
             e.printStackTrace();
         }
 
-        userBtn.addActionListener(e -> {
+        userBtn.addActionListener(_ -> {
             // 加一个短暂延迟（例如 300ms）
-            Timer timer = new Timer(300, event -> {
+            Timer timer = new Timer(300, _ -> {
                 Point currentLocation = this.getLocationOnScreen();
                 this.dispose(); // 隐藏当前界面
                 LoginFrame loginFrame = new LoginFrame(getWidth(), getHeight());
@@ -87,9 +87,9 @@ public class HomeFrame extends JFrame {
             timer.start();
         });
 
-        guestBtn.addActionListener(e -> {
+        guestBtn.addActionListener(_ -> {
             // 加一个短暂延迟（例如 300ms）
-            Timer timer = new Timer(300, event -> {
+            Timer timer = new Timer(300, _ -> {
                 if (clip != null && clip.isRunning()) {
                     clip.stop();
                     clip.close();
@@ -107,17 +107,15 @@ public class HomeFrame extends JFrame {
             timer.start();
         });
 
-        musicBtn.addActionListener(e -> {
+        musicBtn.addActionListener(_ -> {
             try {
                 if (clip != null && clip.isRunning()) {
                     clip.stop();
-                    clip.close();
                     musicBtn.setText("音乐打开");
                 } else {
-                    AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("Resources/Music/begin and end/start_music.wav"));
-                    clip = AudioSystem.getClip();
-                    clip.open(audioIn);
-                    clip.start();
+                    if (clip != null) {
+                        clip.start();
+                    }
                     musicBtn.setText("音乐停止");
                 }
             } catch (Exception ex) {
