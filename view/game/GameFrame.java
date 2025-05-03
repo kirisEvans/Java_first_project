@@ -38,7 +38,7 @@ public class GameFrame extends JFrame {
         this.setContentPane(backgroundPanel);
 
         gamePanel = new GamePanel(mapModel, getWidth());
-        gamePanel.setLocation((int) ((getWidth() - gamePanel.getWidth()) / 1.3), (int) ((getHeight() - gamePanel.getHeight()) / 1.5));
+        gamePanel.setLocation((int) ((getWidth() - gamePanel.getWidth()) / 1.2), (int) ((getHeight() - gamePanel.getHeight()) / 1.5));
         backgroundPanel.add(gamePanel);
 
         this.stepLabel = gamePanel.getStepLabel();
@@ -48,7 +48,7 @@ public class GameFrame extends JFrame {
         JButton saveBtn = new JButton("保存游戏");
         JButton restartBtn = new JButton("重新游戏");
         JButton loadBtn = new JButton("载入游戏");
-        JButton endBtn = new JButton("结束游戏");
+        JButton endBtn = new JButton("结束保存");
         JButton musicBtn = new JButton("音乐停止");
         updateAllButtons(saveBtn,loadBtn,restartBtn,endBtn,musicBtn,getWidth(), getHeight());
         backgroundPanel.add(saveBtn);
@@ -57,7 +57,17 @@ public class GameFrame extends JFrame {
         backgroundPanel.add(endBtn);
         backgroundPanel.add(musicBtn);
 
-        for (JButton btn : Arrays.asList(saveBtn,loadBtn,restartBtn,endBtn,musicBtn)) {
+        JButton upBtn = new JButton("向上");
+        JButton downBtn = new JButton("向下");
+        JButton leftBtn = new JButton("向左");
+        JButton rightBtn = new JButton("向右");
+        updateAllButtons(upBtn, downBtn, leftBtn, rightBtn, getWidth(), getHeight());
+        backgroundPanel.add(upBtn);
+        backgroundPanel.add(downBtn);
+        backgroundPanel.add(leftBtn);
+        backgroundPanel.add(rightBtn);
+
+        for (JButton btn : Arrays.asList(saveBtn,loadBtn,restartBtn,endBtn,musicBtn, upBtn, downBtn, leftBtn, rightBtn)) {
             btn.setFocusPainted(false);         // 取消焦点虚线框
         }
 
@@ -68,6 +78,7 @@ public class GameFrame extends JFrame {
                 updateGamePanel(gamePanel, mapModel, getWidth(), getHeight());
                 updateAllLabels(stepLabel, getWidth(), getHeight());
                 updateAllButtons(saveBtn, loadBtn, restartBtn, endBtn, musicBtn,getWidth(), getHeight());
+                updateAllButtons(upBtn, downBtn, leftBtn, rightBtn, getWidth(), getHeight());
             }
         });
         this.controller = new GameController(this, gamePanel, mapModel);
@@ -77,6 +88,11 @@ public class GameFrame extends JFrame {
         restartBtn.addActionListener(e -> restartGame(gamePanel));
         endBtn.addActionListener(e -> endGame());
         musicBtn.addActionListener(e -> endMusic(musicBtn));
+
+        upBtn.addActionListener(e -> gamePanel.doMoveUp());
+        downBtn.addActionListener(e -> gamePanel.doMoveDown());
+        leftBtn.addActionListener(e -> gamePanel.doMoveLeft());
+        rightBtn.addActionListener(e -> gamePanel.doMoveRight());
 
         if (name == null) {
             saveBtn.setEnabled(false);
@@ -102,7 +118,7 @@ public class GameFrame extends JFrame {
         gamePanel.revalidate();
         gamePanel.repaint();
 
-        gamePanel.setLocation((int) ((frameWidth - gamePanel.getWidth()) / 1.3), (int) ((frameHeight - gamePanel.getHeight()) / 1.5));
+        gamePanel.setLocation((int) ((frameWidth - gamePanel.getWidth()) / 1.2), (int) ((frameHeight - gamePanel.getHeight()) / 1.5));
         gamePanel.paintGame();
     }
 
@@ -138,7 +154,26 @@ public class GameFrame extends JFrame {
         button_3.setFont(font);
         button_4.setFont(font);
         button_5.setFont(font);
-    }//改了
+    }
+
+    private void updateAllButtons(JButton button_1, JButton button_2, JButton button_3,JButton button_4,int frameWidth, int frameHeight) {
+        int btnWidth = frameWidth / 9;
+        int btnHeight = frameHeight / 25;
+        int centerX = (frameWidth - btnWidth) / 6;  //横坐标
+        int startY = frameHeight / 8;  //纵坐标
+        int spacing = btnHeight / 2;
+
+        // 设置每个按钮的位置
+        button_1.setBounds(centerX, startY, btnWidth, btnHeight);
+        button_2.setBounds(centerX, startY + 2 * (btnHeight + spacing), btnWidth, btnHeight);
+        button_3.setBounds(centerX - btnWidth, startY+ btnHeight + spacing,  btnWidth, btnHeight);
+        button_4.setBounds(centerX + btnWidth, startY+ btnHeight + spacing, btnWidth, btnHeight);
+        Font font = new Font("微软雅黑", Font.BOLD, frameHeight / 70);
+        button_1.setFont(font);
+        button_2.setFont(font);
+        button_3.setFont(font);
+        button_4.setFont(font);
+    }
 
     private void restartGame(GamePanel gamePanel) {
         stepLabel.setText("步数: 0");
@@ -150,8 +185,6 @@ public class GameFrame extends JFrame {
         int [][] my_map = gamePanel.deepCopy(MapModel.MAP_1.getCopy());
         MapModel.MAP_1.setMatrix(my_map);
         gamePanel.paintGame();
-        gamePanel.setFocusable(true);
-        gamePanel.requestFocusInWindow();
     }
 
     public void loadGame(GamePanel gamePanel) {
@@ -193,8 +226,11 @@ public class GameFrame extends JFrame {
                 gamePanel.remove(jLabel_list[0]);
                 gamePanel.remove(jLabel_list[1]);
                 gamePanel.paintGame();
-                gamePanel.setFocusable(true);
+                JOptionPane.showMessageDialog(this, "载入成功！");
+            }
+            else {
                 gamePanel.requestFocusInWindow();
+                JOptionPane.showMessageDialog(this, "没有存档！");
             }
 
 
@@ -232,6 +268,7 @@ public class GameFrame extends JFrame {
             conn.close();
             gamePanel.setFocusable(true);
             gamePanel.requestFocusInWindow();
+            JOptionPane.showMessageDialog(this, "保存成功！");
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -244,6 +281,9 @@ public class GameFrame extends JFrame {
     }
 
     public void endGame() {
+        if (name != null) {
+            saveGame(gamePanel);
+        }
         System.exit(0);
     }
 

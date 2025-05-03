@@ -23,7 +23,6 @@ public class GamePanel extends ListenerPanel {
         this.grid_size = width / 10;
         boxes = new ArrayList<>();
         this.setVisible(true);
-        this.setFocusable(true);
         this.setLayout(null);
         this.setSize(model.getWidth() * grid_size + 4, model.getHeight() * grid_size + 4);
         this.model = model;
@@ -32,13 +31,6 @@ public class GamePanel extends ListenerPanel {
         paintGame();
     }
 
-    /*
-                        {1, 2, 2, 1, 1},
-                        {3, 4, 4, 2, 2},
-                        {3, 4, 4, 1, 0},
-                        {1, 2, 2, 1, 0},
-                        {1, 1, 1, 1, 1}
-     */
     public void paintGame() {
         //copy a map
         int[][] map = new int[model.getHeight()][model.getWidth()];
@@ -86,6 +78,7 @@ public class GamePanel extends ListenerPanel {
 
         this.add(jLabel_list[0]);
         this.add(jLabel_list[1]);
+        this.requestFocusInWindow();
         this.revalidate();
         this.repaint();
     }
@@ -176,8 +169,8 @@ public class GamePanel extends ListenerPanel {
             overlay.setBorder(BorderFactory.createEmptyBorder((int) (getWidth() / 25.6), getWidth() / 12, getWidth() / 20, (int) (getWidth() / 12.8)));
 
             // 消息文字
-            JLabel messageLabel = new JLabel("恭喜通关", SwingConstants.CENTER);
-            messageLabel.setFont(new Font("微软雅黑", Font.BOLD, getWidth() / 18));
+            JLabel messageLabel = new JLabel(String.format("恭喜通关！总步数 %d", steps), SwingConstants.CENTER);
+            messageLabel.setFont(new Font("微软雅黑", Font.BOLD, getWidth() / 20));
             messageLabel.setForeground(Color.WHITE);
             overlay.add(messageLabel, BorderLayout.NORTH);
 
@@ -271,7 +264,7 @@ public class GamePanel extends ListenerPanel {
         jLabel.setForeground(Color.red);
         Font headline_font = new Font("微软雅黑", Font.BOLD, (int) (grid_size/1.5));
         jLabel.setFont(headline_font);
-        jLabel.setBounds(my_success_list[1] * grid_size + 12, (1+my_success_list[0]) * grid_size + 2, grid_size, grid_size);
+        jLabel.setBounds((my_success_list[1]+1) * grid_size + 10, my_success_list[0] * grid_size + 2, grid_size, grid_size);
 
         JLabel jLabel1;
         jLabel1 = new JLabel("点");
