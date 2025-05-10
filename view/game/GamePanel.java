@@ -181,28 +181,12 @@ public class GamePanel extends ListenerPanel {
             button.setBackground(new Color(0, 120, 215));
             button.setForeground(Color.WHITE);
             button.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
-            button.addActionListener(e -> {
+            button.addActionListener(_ -> {
                 dialog.dispose();
                 System.exit(0);
             });
 
-            JButton button1 = new JButton("重新开始");
-            button1.setFont(new Font("微软雅黑", Font.PLAIN, getWidth() / 28));
-            button1.setFocusPainted(false);
-            button1.setBackground(new Color(0, 120, 215));
-            button1.setForeground(Color.WHITE);
-            button1.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
-            button1.addActionListener(e -> {
-                dialog.dispose();
-                stepLabel.setText("步数: 0");
-                steps = 0;
-                clearBoxes();
-                int[][] my_map = deepCopy(MapModel.MAP_1.getCopy());
-                this.remove(jLabel_list[0]);
-                this.remove(jLabel_list[1]);
-                MapModel.MAP_1.setMatrix(my_map);
-                paintGame();
-            });
+            JButton button1 = getJButton(dialog);
 
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BorderLayout());
@@ -215,6 +199,27 @@ public class GamePanel extends ListenerPanel {
             dialog.setContentPane(background);
             dialog.setVisible(true);
         }
+    }
+
+    private JButton getJButton(JDialog dialog) {
+        JButton button1 = new JButton("重新开始");
+        button1.setFont(new Font("微软雅黑", Font.PLAIN, getWidth() / 28));
+        button1.setFocusPainted(false);
+        button1.setBackground(new Color(0, 120, 215));
+        button1.setForeground(Color.WHITE);
+        button1.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
+        button1.addActionListener(_ -> {
+            dialog.dispose();
+            stepLabel.setText("步数: 0");
+            steps = 0;
+            clearBoxes();
+            int[][] my_map = deepCopy(MapModel.MAP_1.getCopy());
+            this.remove(jLabel_list[0]);
+            this.remove(jLabel_list[1]);
+            MapModel.MAP_1.setMatrix(my_map);
+            paintGame();
+        });
+        return button1;
     }
 
     public JLabel getStepLabel() {
@@ -274,7 +279,7 @@ public class GamePanel extends ListenerPanel {
         return new JLabel[]{jLabel, jLabel1};
     }
 
-    public JLabel[] getjLabel_list() {
+    public JLabel[] getJLabel_list() {
         return jLabel_list;
     }
 }

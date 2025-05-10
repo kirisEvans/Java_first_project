@@ -83,16 +83,16 @@ public class GameFrame extends JFrame {
         });
         this.controller = new GameController(this, gamePanel, mapModel);
 
-        saveBtn.addActionListener(e -> saveGame(gamePanel));
-        loadBtn.addActionListener(e -> loadGame(gamePanel));
-        restartBtn.addActionListener(e -> restartGame(gamePanel));
-        endBtn.addActionListener(e -> endGame());
-        musicBtn.addActionListener(e -> endMusic(musicBtn));
+        saveBtn.addActionListener(_ -> saveGame(gamePanel));
+        loadBtn.addActionListener(_ -> loadGame(gamePanel));
+        restartBtn.addActionListener(_ -> restartGame(gamePanel));
+        endBtn.addActionListener(_ -> endGame());
+        musicBtn.addActionListener(_ -> endMusic(musicBtn));
 
-        upBtn.addActionListener(e -> gamePanel.doMoveUp());
-        downBtn.addActionListener(e -> gamePanel.doMoveDown());
-        leftBtn.addActionListener(e -> gamePanel.doMoveLeft());
-        rightBtn.addActionListener(e -> gamePanel.doMoveRight());
+        upBtn.addActionListener(_ -> gamePanel.doMoveUp());
+        downBtn.addActionListener(_ -> gamePanel.doMoveDown());
+        leftBtn.addActionListener(_ -> gamePanel.doMoveLeft());
+        rightBtn.addActionListener(_ -> gamePanel.doMoveRight());
 
         if (name == null) {
             saveBtn.setEnabled(false);
@@ -179,7 +179,7 @@ public class GameFrame extends JFrame {
         stepLabel.setText("步数: 0");
         gamePanel.steps = 0;
         gamePanel.clearBoxes();
-        JLabel[] jLabel_list = gamePanel.getjLabel_list();
+        JLabel[] jLabel_list = gamePanel.getJLabel_list();
         gamePanel.remove(jLabel_list[0]);
         gamePanel.remove(jLabel_list[1]);
         int [][] my_map = gamePanel.deepCopy(MapModel.MAP_1.getCopy());
@@ -214,7 +214,20 @@ public class GameFrame extends JFrame {
                 for (int i = 0; i < rows.length; i++) {
                     String[] columns = rows[i].split(", ");
                     newArray2D[i] = new int[columns.length];
+                    String[] element = {"0", "1", "2", "3", "4"};
                     for (int j = 0; j < columns.length; j++) {
+                        boolean valid = true;
+                        for (String value : element) {
+                            if (columns[j].equals(value)) {
+                                valid = false;
+                                break;
+                            }
+                        }
+                        if (valid) {
+                            JOptionPane.showMessageDialog(this, "数据错误！可能被修改。");
+                            gamePanel.requestFocusInWindow();
+                            return;
+                        }
                         newArray2D[i][j] = Integer.parseInt(columns[j]);
                     }
                 }
@@ -222,7 +235,7 @@ public class GameFrame extends JFrame {
                 stepLabel.setText(String.format("步数: %d", steps));
                 MapModel.MAP_1.setMatrix(newArray2D);
                 gamePanel.clearBoxes();
-                JLabel[] jLabel_list = gamePanel.getjLabel_list();
+                JLabel[] jLabel_list = gamePanel.getJLabel_list();
                 gamePanel.remove(jLabel_list[0]);
                 gamePanel.remove(jLabel_list[1]);
                 gamePanel.paintGame();
@@ -239,9 +252,8 @@ public class GameFrame extends JFrame {
             conn.close();
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(this,
-                    "数据库连接出错！\n" +
+                    "载入失败！\n" +
                             "错误类型: " + ex.getClass().getSimpleName() + "\n" +
                             "详细信息: " + ex.getMessage()
             );
@@ -271,7 +283,6 @@ public class GameFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "保存成功！");
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(this,
                     "数据库连接出错！\n" +
                             "错误类型: " + ex.getClass().getSimpleName() + "\n" +
@@ -303,7 +314,7 @@ public class GameFrame extends JFrame {
             gamePanel.setFocusable(true);
             gamePanel.requestFocusInWindow();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "操作失败！");
         }
     }
 }
