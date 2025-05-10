@@ -66,7 +66,7 @@ public class RegisterFrame extends JFrame {
         this.setContentPane(backgroundPanel);
 
 
-        registerBtn.addActionListener(e -> {
+        registerBtn.addActionListener(_ -> {
             String name = username.getText();
             String secret = password.getText();
 
@@ -105,7 +105,7 @@ public class RegisterFrame extends JFrame {
                         // 清空输入框或其他后续操作
                         username.setText("");
                         password.setText("");
-                        Timer timer = new Timer(300, event -> {
+                        Timer timer = new Timer(300, _ -> {
                             Point currentLocation = this.getLocationOnScreen();
                             this.dispose(); // 隐藏当前界面
                             LoginFrame loginFrame = new LoginFrame(getWidth(), getHeight());
@@ -127,7 +127,6 @@ public class RegisterFrame extends JFrame {
                 checkPs.close();
                 conn.close();
             } catch (Exception ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(this,
                         "数据库连接出错！\n" +
                                 "错误类型: " + ex.getClass().getSimpleName() + "\n" +
@@ -136,7 +135,7 @@ public class RegisterFrame extends JFrame {
             }
         });
 
-        resetBtn.addActionListener(e -> {
+        resetBtn.addActionListener(_ -> {
             username.setText("");
             password.setText("");
         });

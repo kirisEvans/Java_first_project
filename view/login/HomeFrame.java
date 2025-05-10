@@ -71,7 +71,7 @@ public class HomeFrame extends JFrame {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "操作失败！");
         }
 
         userBtn.addActionListener(_ -> {
@@ -119,7 +119,7 @@ public class HomeFrame extends JFrame {
                     musicBtn.setText("音乐停止");
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "操作失败！");
             }
         });
 
