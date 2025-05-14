@@ -25,7 +25,7 @@ public class GameFrame extends JFrame {
     private GameMusic gameMusic;
 
     public GameFrame(int width, int height, MapModel mapModel, String name, GameMusic gameMusic) {
-        this.setTitle("游戏界面");
+        this.setTitle(String.format("用户%s", name));
         this.setLayout(null);
         this.setSize(width, height);
         this.mapModel = mapModel;
