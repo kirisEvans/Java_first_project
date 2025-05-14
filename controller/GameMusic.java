@@ -12,7 +12,6 @@ public class GameMusic {
     ArrayList<File> musicFiles = null;
     Iterator<File> currentIterator = null;
     private Clip clip;
-    private boolean isStopping = false;
 
     public GameMusic(String path) {
         File folder = new File(path);
@@ -56,22 +55,21 @@ public class GameMusic {
             clip.open(decodedAudio);
 
             clip.addLineListener(event -> {
-                if (isStopping) {
-                    isStopping = false;  // 重置标志，防止自动播放下一首
-                    return;  // 跳过自动播放下一首
-                }
                 if (event.getType() == LineEvent.Type.STOP) {
-                    // 播放完当前音乐后，播放下一首
-                    if (currentIterator.hasNext()) {
-                        playNext();
-                    } else {
-                        // 如果没有更多的音乐了，重新洗牌并开始播放
-                        Collections.shuffle(musicFiles);
-                        currentIterator = musicFiles.iterator();
-                        playNext();
+                    // 如果播放到末尾才自动切换下一首
+                    if (clip.getFramePosition() == clip.getFrameLength()) {
+                        // 播放完当前音乐后，播放下一首
+                        if (currentIterator.hasNext()) {
+                            playNext();
+                        } else {
+                            Collections.shuffle(musicFiles);
+                            currentIterator = musicFiles.iterator();
+                            playNext();
+                        }
                     }
                 }
             });
+
 
             clip.start();
 
@@ -100,8 +98,9 @@ public class GameMusic {
 
                 // 转换流
                 AudioInputStream decodedAudio = AudioSystem.getAudioInputStream(targetFormat, audio);
-
-                clip = AudioSystem.getClip();
+                clip.stop();
+                clip.flush();
+                clip.close(); // 释放原资源
                 clip.open(decodedAudio);
                 clip.start(); // 开始播放下一首
             } catch (Exception ex) {
@@ -112,9 +111,5 @@ public class GameMusic {
 
     public Clip getClip() {
         return this.clip;
-    }
-
-    public void setStopping(boolean stopping) {
-        isStopping = stopping;
     }
 }

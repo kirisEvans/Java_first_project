@@ -302,7 +302,6 @@ public class GameFrame extends JFrame {
         try {
             if (clip != null && clip.isRunning()) {
                 clip.stop();
-                gameMusic.setStopping(true);
                 musicBtn.setText("音乐打开");
             } else {
 
